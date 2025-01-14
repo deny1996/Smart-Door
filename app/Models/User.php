@@ -4,8 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Link;
+use App\Models\AuditLog;
 
 class User extends Authenticatable
 {
@@ -17,7 +20,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
     ];
@@ -44,4 +48,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function links(): HasMany
+    {
+        return $this->hasMany(Link::class, 'created_by');
+    }
+
+    public function guests(): HasMany
+    {
+        return $this->hasMany(Guest::class, 'guest_of');
+    }
+
 }
+
